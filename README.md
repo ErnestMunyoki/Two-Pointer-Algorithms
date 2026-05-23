@@ -213,4 +213,3 @@ For detailed complexity analysis, pseudocode, and empirical results, see `report
 
 ## License
 
-This project is provided for educational purposes.
