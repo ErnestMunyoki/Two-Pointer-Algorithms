@@ -1,0 +1,13 @@
+Algorithm,Input Size,Time (microseconds)
+Reverse String,1000,3
+Palindrome Checker,1000,0
+Remove Duplicates,1000,9
+Merge Sorted Arrays,1000,51
+Reverse String,10000,26
+Palindrome Checker,10000,0
+Remove Duplicates,10000,87
+Merge Sorted Arrays,10000,3407
+Reverse String,100000,312
+Palindrome Checker,100000,0
+Remove Duplicates,100000,874
+Merge Sorted Arrays,100000,19888

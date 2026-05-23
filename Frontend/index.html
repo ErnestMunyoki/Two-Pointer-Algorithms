@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Pointer Algorithms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .refresh-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(233, 69, 96, 0.2);
+            color: white;
+            border: 2px solid #e94560;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #e94560;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .algorithm-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        .algorithm-grid .center-card {
+            grid-column: 2;
+        }
+
+        .algorithm-card {
+            background: rgba(30, 30, 50, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .algorithm-card h2 {
+            color: #e94560;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .algorithm-card .icon {
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #b0b0b0;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: rgba(20, 20, 35, 0.8);
+            color: #e0e0e0;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #e94560;
+            background: rgba(30, 30, 50, 0.95);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: #666;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e94560 0%, #c73e54 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(40, 40, 70, 0.9) 0%, rgba(30, 30, 60, 0.9) 100%);
+            border-radius: 12px;
+            border-left: 5px solid #e94560;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        .result h3 {
+            color: #e94560;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result h3::before {
+            content: '✨';
+        }
+
+        .result p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+            font-size: 0.95em;
+            color: #d0d0d0;
+        }
+
+        .result strong {
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+
+        .result .array-display {
+            background: rgba(20, 20, 35, 0.9);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e0e0e0;
+            margin: 8px 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result .success {
+            color: #28a745;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .result .error {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .complexity {
+            font-size: 0.85em;
+            color: #b0b0b0;
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(199, 62, 84, 0.15) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .complexity::before {
+            content: '⚡';
+        }
+
+        .complexity strong {
+            color: #e94560;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Two-Pointer Algorithms</h1>
+            <p>Interactive demonstrations of efficient two-pointer techniques</p>
+            <button class="refresh-btn" onclick="refreshPage()">🔄 Refresh</button>
+        </header>
+
+        <div class="algorithm-grid">
+            <!-- Reverse String -->
+            <div class="algorithm-card">
+                <h2><span class="icon">🔄</span> Reverse String</h2>
+                <div class="input-group">
+                    <label for="reverseInput">Enter string to reverse:</label>
+                    <input type="text" id="reverseInput" placeholder="e.g., hello world">
+                </div>
+                <button class="btn" onclick="reverseString()">Reverse String</button>
+                <div class="result" id="reverseResult"></div>
+                <div class="complexity">
+                    <strong>Time:</strong> O(n) | <strong>Space:</strong> O(1)
+                </div>
+            </div>
+
+            <!-- Merge Sorted Arrays -->
+            <div class="algorithm-card">
+                <h2><span class="icon">🔗</span> Merge Sorted Arrays</h2>
+                <div class="input-group">
+                    <label for="mergeInput1">First sorted array (comma-separated):</label>
+                    <input type="text" id="mergeInput1" placeholder="e.g., 1,3,5,7">
+                </div>
+                <div class="input-group">
+                    <label for="mergeInput2">Second sorted array (comma-separated):</label>
+                    <input type="text" id="mergeInput2" placeholder="e.g., 2,4,6,8">
+                </div>
+                <button class="btn" onclick="mergeArrays()">Merge Arrays</button>
+                <div class="result" id="mergeResult"></div>
+                <div class="complexity">
+                    <strong>Time:</strong> O(n+m) | <strong>Space:</strong> O(n+m)
+                </div>
+            </div>
+
+            <!-- Palindrome Checker -->
+            <div class="algorithm-card">
+                <h2><span class="icon">🔍</span> Palindrome Checker</h2>
+                <div class="input-group">
+                    <label for="palindromeInput">Enter string to check:</label>
+                    <input type="text" id="palindromeInput" placeholder="e.g., racecar">
+                </div>
+                <button class="btn" onclick="checkPalindrome()">Check Palindrome</button>
+                <div class="result" id="palindromeResult"></div>
+                <div class="complexity">
+                    <strong>Time:</strong> O(n) | <strong>Space:</strong> O(1)
+                </div>
+            </div>
+
+            <!-- Remove Duplicates (Centered) -->
+            <div class="algorithm-card center-card">
+                <h2><span class="icon">🗑️</span> Remove Duplicates</h2>
+                <div class="input-group">
+                    <label for="duplicatesInput">Enter sorted array (comma-separated):</label>
+                    <input type="text" id="duplicatesInput" placeholder="e.g., 1,1,2,2,3,4,4,5">
+                </div>
+                <button class="btn" onclick="removeDuplicates()">Remove Duplicates</button>
+                <div class="result" id="duplicatesResult"></div>
+                <div class="complexity">
+                    <strong>Time:</strong> O(n) | <strong>Space:</strong> O(1)
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Two-Pointer Algorithms Library | Built with ❤️ for learning</p>
+        </footer>
+    </div>
+
+    <script>
+        // Reverse String Algorithm
+        function reverseString() {
+            const input = document.getElementById('reverseInput').value;
+            const resultDiv = document.getElementById('reverseResult');
+
+            if (!input) {
+                resultDiv.innerHTML = '<p class="error">Please enter a string.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            let str = input;
+            let left = 0;
+            let right = str.length - 1;
+            let arr = str.split('');
+
+            while (left < right) {
+                [arr[left], arr[right]] = [arr[right], arr[left]];
+                left++;
+                right--;
+            }
+
+            const reversed = arr.join('');
+            resultDiv.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>Original String:</strong></p>
+                <div class="array-display">"${input}"</div>
+                <p><strong>Reversed String:</strong></p>
+                <div class="array-display">"${reversed}"</div>
+                <p><strong>Length:</strong> ${input.length} characters</p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // Palindrome Checker Algorithm
+        function checkPalindrome() {
+            const input = document.getElementById('palindromeInput').value;
+            const resultDiv = document.getElementById('palindromeResult');
+
+            if (!input) {
+                resultDiv.innerHTML = '<p class="error">Please enter a string.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            let left = 0;
+            let right = input.length - 1;
+            let isPalindrome = true;
+
+            while (left < right) {
+                if (input[left] !== input[right]) {
+                    isPalindrome = false;
+                    break;
+                }
+                left++;
+                right--;
+            }
+
+            resultDiv.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>String:</strong></p>
+                <div class="array-display">"${input}"</div>
+                <p><strong>Length:</strong> ${input.length} characters</p>
+                <p class="${isPalindrome ? 'success' : 'error'}">
+                    <strong>${isPalindrome ? '✓' : '✗'}</strong> ${isPalindrome ? 'Is a palindrome!' : 'Is NOT a palindrome'}
+                </p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // Remove Duplicates Algorithm
+        function removeDuplicates() {
+            const input = document.getElementById('duplicatesInput').value;
+            const resultDiv = document.getElementById('duplicatesResult');
+
+            if (!input) {
+                resultDiv.innerHTML = '<p class="error">Please enter an array.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            const arr = input.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+
+            if (arr.length === 0) {
+                resultDiv.innerHTML = '<p class="error">Please enter valid numbers.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            // Check if array is sorted
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] < arr[i-1]) {
+                    resultDiv.innerHTML = '<p class="error">Array must be sorted in ascending order.</p>';
+                    resultDiv.classList.add('show');
+                    return;
+                }
+            }
+
+            const originalArr = [...arr]; // Copy original array
+            let slow = 0;
+            for (let fast = 1; fast < arr.length; fast++) {
+                if (arr[fast] !== arr[slow]) {
+                    slow++;
+                    arr[slow] = arr[fast];
+                }
+            }
+
+            const unique = arr.slice(0, slow + 1);
+            resultDiv.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>Original Array:</strong></p>
+                <div class="array-display">[${originalArr.join(', ')}]</div>
+                <p><strong>After Removing Duplicates:</strong></p>
+                <div class="array-display">[${unique.join(', ')}]</div>
+                <p><strong>New Length:</strong> ${slow + 1} elements</p>
+                <p><strong>Removed:</strong> ${originalArr.length - (slow + 1)} duplicate(s)</p>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // Merge Sorted Arrays Algorithm
+        function mergeArrays() {
+            const input1 = document.getElementById('mergeInput1').value;
+            const input2 = document.getElementById('mergeInput2').value;
+            const resultDiv = document.getElementById('mergeResult');
+
+            if (!input1 || !input2) {
+                resultDiv.innerHTML = '<p class="error">Please enter both arrays.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            const arr1 = input1.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+            const arr2 = input2.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+
+            if (arr1.length === 0 || arr2.length === 0) {
+                resultDiv.innerHTML = '<p class="error">Please enter valid numbers in both arrays.</p>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            // Check if arrays are sorted
+            for (let i = 1; i < arr1.length; i++) {
+                if (arr1[i] < arr1[i-1]) {
+                    resultDiv.innerHTML = '<p class="error">First array must be sorted in ascending order.</p>';
+                    resultDiv.classList.add('show');
+                    return;
+                }
+            }
+            for (let i = 1; i < arr2.length; i++) {
+                if (arr2[i] < arr2[i-1]) {
+                    resultDiv.innerHTML = '<p class="error">Second array must be sorted in ascending order.</p>';
+                    resultDiv.classList.add('show');
+                    return;
+                }
+            }
+
+            let i = 0, j = 0;
+            const merged = [];
+
+            while (i < arr1.length && j < arr2.length) {
+                if (arr1[i] <= arr2[j]) {
+                    merged.push(arr1[i]);
+                    i++;
+                } else {
+                    merged.push(arr2[j]);
+                    j++;
+                }
+            }
+
+            while (i < arr1.length) {
+                merged.push(arr1[i]);
+                i++;
+            }
+
+            while (j < arr2.length) {
+                merged.push(arr2[j]);
+                j++;
+            }
+
+            resultDiv.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>Array 1 (${arr1.length} elements):</strong></p>
+                <div class="array-display">[${arr1.join(', ')}]</div>
+                <p><strong>Array 2 (${arr2.length} elements):</strong></p>
+                <div class="array-display">[${arr2.join(', ')}]</div>
+                <p><strong>Merged Array (${merged.length} elements):</strong></p>
+                <div class="array-display">[${merged.join(', ')}]</div>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        // Add enter key support for inputs
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const button = this.parentElement.querySelector('.btn');
+                    if (button) button.click();
+                }
+            });
+        });
+
+        // Refresh/Clear all inputs and results
+        function refreshPage() {
+            // Clear all input fields
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
+
+            // Hide all result sections
+            document.querySelectorAll('.result').forEach(result => {
+                result.classList.remove('show');
+            });
+
+            // Add visual feedback
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.textContent = '✓ Cleared!';
+            setTimeout(() => {
+                refreshBtn.textContent = '🔄 Refresh';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

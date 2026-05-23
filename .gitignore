@@ -1,0 +1,32 @@
+# Build directories
+Backend/build/
+Backend/Makefile/
+Frontend/build/
+
+# Compiled Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Benchmark results (optional - uncomment if you don't want to track timing data)
+# report/timing_results.txt
