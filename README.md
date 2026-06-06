@@ -211,5 +211,11 @@ The test suite includes:
 
 For detailed complexity analysis, pseudocode, and empirical results, see `report/report.md`.
 
-## License
+## Contribution
+
+Feel free to fork the repo and submit a pull request.
+
+## Author
+
+ErnestMunyoki - GitHub
 
