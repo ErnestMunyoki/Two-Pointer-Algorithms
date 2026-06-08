@@ -13,16 +13,23 @@ WORKDIR /app
 # Copy backend files
 COPY . /app/
 
-# Download external dependencies
-RUN mkdir -p external && \
-    cd external && \
-    wget -q https://github.com/yhirose/cpp-httplib/archive/refs/tags/v0.15.3.tar.gz && \
-    tar -xzf v0.15.3.tar.gz && \
-    mv cpp-httplib-0.15.3 cpp-httplib && \
-    wget -q https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz && \
-    tar -xzf v3.11.3.tar.gz && \
-    mv json-3.11.3 json && \
-    rm -f cpp-httplib.tar.gz json.tar.gz
+# Copy pre-downloaded external dependencies if they exist, otherwise download them
+RUN if [ -d "external/cpp-httplib" ] && [ -d "external/json" ]; then \
+        echo "Using pre-downloaded dependencies"; \
+    else \
+        mkdir -p external && \
+        cd external && \
+        echo "Downloading cpp-httplib..." && \
+        wget -q https://github.com/yhirose/cpp-httplib/archive/refs/tags/v0.15.3.tar.gz && \
+        tar -xzf v0.15.3.tar.gz && \
+        mv cpp-httplib-0.15.3 cpp-httplib && \
+        echo "Downloading nlohmann/json..." && \
+        wget -q https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz && \
+        tar -xzf v3.11.3.tar.gz && \
+        mv json-3.11.3 json && \
+        rm -f cpp-httplib.tar.gz json.tar.gz && \
+        echo "Dependencies downloaded successfully"; \
+    fi
 
 # Build the API server
 RUN make -f makefile directories && make -f makefile api
