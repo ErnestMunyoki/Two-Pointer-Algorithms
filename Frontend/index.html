@@ -370,8 +370,9 @@
     </div>
 
     <script>
-        // Use environment variable for API URL, fallback to localhost for development
-        const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8080/api';
+        // API URL configuration
+        // In production, this will be replaced by Vercel during build
+        const API_BASE_URL = 'https://two-pointer-algorithms.onrender.com/api';
 
         // Reverse String Algorithm
         async function reverseString() {
