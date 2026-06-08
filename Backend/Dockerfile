@@ -25,7 +25,7 @@ RUN mkdir -p external && \
     rm -f cpp-httplib.tar.gz json.tar.gz
 
 # Build the API server
-RUN make -f makefile api
+RUN make -f makefile directories && make -f makefile api
 
 # Expose port 8080
 EXPOSE 8080
