@@ -6,6 +6,7 @@ INCLUDE_DIR = include
 SRC_DIR = src
 TEST_DIR = tests
 BENCHMARK_DIR = benchmark
+EXTERNAL_DIR = external
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 
@@ -24,9 +25,10 @@ DEMO_EXEC = $(BUILD_DIR)/demo
 TEST_EXEC = $(BUILD_DIR)/tests
 BENCHMARK_EXEC = $(BUILD_DIR)/benchmark
 CLI_EXEC = $(BUILD_DIR)/cli
+API_EXEC = $(BUILD_DIR)/api_server
 
 # Default target
-all: directories $(DEMO_EXEC) $(TEST_EXEC) $(BENCHMARK_EXEC) $(CLI_EXEC)
+all: directories $(DEMO_EXEC) $(TEST_EXEC) $(BENCHMARK_EXEC) $(CLI_EXEC) $(API_EXEC)
 
 # Create necessary directories
 directories:
@@ -53,6 +55,10 @@ $(BENCHMARK_EXEC): $(OBJS) $(BENCHMARK_DIR)/benchmark.cpp
 $(CLI_EXEC): $(OBJS) $(SRC_DIR)/cli.cpp
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) $(OBJS) $(SRC_DIR)/cli.cpp -o $@
 
+# Build API server executable
+$(API_EXEC): $(OBJS) $(SRC_DIR)/api_server.cpp
+	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -I$(EXTERNAL_DIR)/cpp-httplib -I$(EXTERNAL_DIR)/json/include $(OBJS) $(SRC_DIR)/api_server.cpp -o $@ -pthread
+
 # Run demo
 demo: $(DEMO_EXEC)
 	./$(DEMO_EXEC)
@@ -69,6 +75,10 @@ benchmark: $(BENCHMARK_EXEC)
 cli: $(CLI_EXEC)
 	./$(CLI_EXEC)
 
+# Run API server
+api: $(API_EXEC)
+	./$(API_EXEC)
+
 # Clean build artifacts
 clean:
 	rm -rf $(BUILD_DIR)
@@ -77,4 +87,4 @@ clean:
 distclean: clean
 	rm -f ../report/timing_results.txt
 
-.PHONY: all directories demo test benchmark cli clean distclean
+.PHONY: all directories demo test benchmark cli api clean distclean

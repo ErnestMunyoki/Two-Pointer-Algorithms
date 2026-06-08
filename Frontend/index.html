@@ -370,8 +370,10 @@
     </div>
 
     <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+
         // Reverse String Algorithm
-        function reverseString() {
+        async function reverseString() {
             const input = document.getElementById('reverseInput').value;
             const resultDiv = document.getElementById('reverseResult');
 
@@ -381,31 +383,38 @@
                 return;
             }
 
-            let str = input;
-            let left = 0;
-            let right = str.length - 1;
-            let arr = str.split('');
+            try {
+                const response = await fetch(`${API_BASE_URL}/reverse`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ str: input })
+                });
 
-            while (left < right) {
-                [arr[left], arr[right]] = [arr[right], arr[left]];
-                left++;
-                right--;
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>Result:</h3>
+                        <p><strong>Original String:</strong></p>
+                        <div class="array-display">"${data.original}"</div>
+                        <p><strong>Reversed String:</strong></p>
+                        <div class="array-display">"${data.reversed}"</div>
+                        <p><strong>Length:</strong> ${data.length} characters</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                }
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Failed to connect to backend API. Make sure the API server is running.</p>`;
+                resultDiv.classList.add('show');
             }
-
-            const reversed = arr.join('');
-            resultDiv.innerHTML = `
-                <h3>Result:</h3>
-                <p><strong>Original String:</strong></p>
-                <div class="array-display">"${input}"</div>
-                <p><strong>Reversed String:</strong></p>
-                <div class="array-display">"${reversed}"</div>
-                <p><strong>Length:</strong> ${input.length} characters</p>
-            `;
-            resultDiv.classList.add('show');
         }
 
         // Palindrome Checker Algorithm
-        function checkPalindrome() {
+        async function checkPalindrome() {
             const input = document.getElementById('palindromeInput').value;
             const resultDiv = document.getElementById('palindromeResult');
 
@@ -415,33 +424,39 @@
                 return;
             }
 
-            let left = 0;
-            let right = input.length - 1;
-            let isPalindrome = true;
+            try {
+                const response = await fetch(`${API_BASE_URL}/palindrome`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ str: input })
+                });
 
-            while (left < right) {
-                if (input[left] !== input[right]) {
-                    isPalindrome = false;
-                    break;
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>Result:</h3>
+                        <p><strong>String:</strong></p>
+                        <div class="array-display">"${data.string}"</div>
+                        <p><strong>Length:</strong> ${data.length} characters</p>
+                        <p class="${data.isPalindrome ? 'success' : 'error'}">
+                            <strong>${data.isPalindrome ? '✓' : '✗'}</strong> ${data.isPalindrome ? 'Is a palindrome!' : 'Is NOT a palindrome'}
+                        </p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
                 }
-                left++;
-                right--;
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Failed to connect to backend API. Make sure the API server is running.</p>`;
+                resultDiv.classList.add('show');
             }
-
-            resultDiv.innerHTML = `
-                <h3>Result:</h3>
-                <p><strong>String:</strong></p>
-                <div class="array-display">"${input}"</div>
-                <p><strong>Length:</strong> ${input.length} characters</p>
-                <p class="${isPalindrome ? 'success' : 'error'}">
-                    <strong>${isPalindrome ? '✓' : '✗'}</strong> ${isPalindrome ? 'Is a palindrome!' : 'Is NOT a palindrome'}
-                </p>
-            `;
-            resultDiv.classList.add('show');
         }
 
         // Remove Duplicates Algorithm
-        function removeDuplicates() {
+        async function removeDuplicates() {
             const input = document.getElementById('duplicatesInput').value;
             const resultDiv = document.getElementById('duplicatesResult');
 
@@ -459,39 +474,39 @@
                 return;
             }
 
-            // Check if array is sorted
-            for (let i = 1; i < arr.length; i++) {
-                if (arr[i] < arr[i-1]) {
-                    resultDiv.innerHTML = '<p class="error">Array must be sorted in ascending order.</p>';
-                    resultDiv.classList.add('show');
-                    return;
-                }
-            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/remove-duplicates`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ array: arr })
+                });
 
-            const originalArr = [...arr]; // Copy original array
-            let slow = 0;
-            for (let fast = 1; fast < arr.length; fast++) {
-                if (arr[fast] !== arr[slow]) {
-                    slow++;
-                    arr[slow] = arr[fast];
-                }
-            }
+                const data = await response.json();
 
-            const unique = arr.slice(0, slow + 1);
-            resultDiv.innerHTML = `
-                <h3>Result:</h3>
-                <p><strong>Original Array:</strong></p>
-                <div class="array-display">[${originalArr.join(', ')}]</div>
-                <p><strong>After Removing Duplicates:</strong></p>
-                <div class="array-display">[${unique.join(', ')}]</div>
-                <p><strong>New Length:</strong> ${slow + 1} elements</p>
-                <p><strong>Removed:</strong> ${originalArr.length - (slow + 1)} duplicate(s)</p>
-            `;
-            resultDiv.classList.add('show');
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>Result:</h3>
+                        <p><strong>Original Array:</strong></p>
+                        <div class="array-display">[${data.original.join(', ')}]</div>
+                        <p><strong>After Removing Duplicates:</strong></p>
+                        <div class="array-display">[${data.unique.join(', ')}]</div>
+                        <p><strong>New Length:</strong> ${data.newLength} elements</p>
+                        <p><strong>Removed:</strong> ${data.removed} duplicate(s)</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                }
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Failed to connect to backend API. Make sure the API server is running.</p>`;
+                resultDiv.classList.add('show');
+            }
         }
 
         // Merge Sorted Arrays Algorithm
-        function mergeArrays() {
+        async function mergeArrays() {
             const input1 = document.getElementById('mergeInput1').value;
             const input2 = document.getElementById('mergeInput2').value;
             const resultDiv = document.getElementById('mergeResult');
@@ -511,55 +526,35 @@
                 return;
             }
 
-            // Check if arrays are sorted
-            for (let i = 1; i < arr1.length; i++) {
-                if (arr1[i] < arr1[i-1]) {
-                    resultDiv.innerHTML = '<p class="error">First array must be sorted in ascending order.</p>';
-                    resultDiv.classList.add('show');
-                    return;
-                }
-            }
-            for (let i = 1; i < arr2.length; i++) {
-                if (arr2[i] < arr2[i-1]) {
-                    resultDiv.innerHTML = '<p class="error">Second array must be sorted in ascending order.</p>';
-                    resultDiv.classList.add('show');
-                    return;
-                }
-            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/merge`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ array1: arr1, array2: arr2 })
+                });
 
-            let i = 0, j = 0;
-            const merged = [];
+                const data = await response.json();
 
-            while (i < arr1.length && j < arr2.length) {
-                if (arr1[i] <= arr2[j]) {
-                    merged.push(arr1[i]);
-                    i++;
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>Result:</h3>
+                        <p><strong>Array 1 (${data.array1.length} elements):</strong></p>
+                        <div class="array-display">[${data.array1.join(', ')}]</div>
+                        <p><strong>Array 2 (${data.array2.length} elements):</strong></p>
+                        <div class="array-display">[${data.array2.join(', ')}]</div>
+                        <p><strong>Merged Array (${data.merged.length} elements):</strong></p>
+                        <div class="array-display">[${data.merged.join(', ')}]</div>
+                    `;
                 } else {
-                    merged.push(arr2[j]);
-                    j++;
+                    resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
                 }
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Failed to connect to backend API. Make sure the API server is running.</p>`;
+                resultDiv.classList.add('show');
             }
-
-            while (i < arr1.length) {
-                merged.push(arr1[i]);
-                i++;
-            }
-
-            while (j < arr2.length) {
-                merged.push(arr2[j]);
-                j++;
-            }
-
-            resultDiv.innerHTML = `
-                <h3>Result:</h3>
-                <p><strong>Array 1 (${arr1.length} elements):</strong></p>
-                <div class="array-display">[${arr1.join(', ')}]</div>
-                <p><strong>Array 2 (${arr2.length} elements):</strong></p>
-                <div class="array-display">[${arr2.join(', ')}]</div>
-                <p><strong>Merged Array (${merged.length} elements):</strong></p>
-                <div class="array-display">[${merged.join(', ')}]</div>
-            `;
-            resultDiv.classList.add('show');
         }
 
         // Add enter key support for inputs
