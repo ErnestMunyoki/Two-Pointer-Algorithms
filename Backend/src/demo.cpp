@@ -21,7 +21,6 @@ int main() {
     std::cout << "Two-Pointer Algorithms Demo\n";
     std::cout << "========================================\n\n";
     
-    // Demo 1: Reverse String
     std::cout << "1. Reverse String Algorithm\n";
     std::cout << "----------------------------\n";
     std::string testStr1 = "hello";
@@ -34,7 +33,6 @@ int main() {
     TwoPointerAlgorithms::reverseString(testStr2);
     std::cout << "Reversed: \"" << testStr2 << "\"\n\n";
     
-    // Demo 2: Palindrome Checker
     std::cout << "2. Palindrome Checker Algorithm\n";
     std::cout << "--------------------------------\n";
     std::string palindrome1 = "racecar";
@@ -49,7 +47,6 @@ int main() {
     std::cout << "Is \"" << palindrome3 << "\" a palindrome? " 
               << (TwoPointerAlgorithms::isPalindrome(palindrome3) ? "Yes" : "No") << "\n\n";
     
-    // Demo 3: Remove Duplicates
     std::cout << "3. Remove Duplicates Algorithm\n";
     std::cout << "------------------------------\n";
     std::vector<int> arr1 = {1, 1, 2, 2, 3, 4, 4, 5};
@@ -70,7 +67,6 @@ int main() {
     printVector(arr2);
     std::cout << "\n\n";
     
-    // Demo 4: Merge Sorted Arrays
     std::cout << "4. Merge Sorted Arrays Algorithm\n";
     std::cout << "---------------------------------\n";
     std::vector<int> merge1 = {1, 3, 5, 7};

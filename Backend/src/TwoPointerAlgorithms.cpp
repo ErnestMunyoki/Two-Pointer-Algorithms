@@ -17,4 +17,4 @@ void runAllAlgorithms() {
     std::cout << "\n========================================\n";
 }
 
-} // namespace TwoPointerAlgorithms
+}

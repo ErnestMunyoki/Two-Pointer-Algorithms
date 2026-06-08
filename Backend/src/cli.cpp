@@ -24,7 +24,6 @@ std::vector<int> parseVector(const std::string& input) {
         try {
             result.push_back(std::stoi(token));
         } catch (...) {
-            // Skip invalid tokens
         }
     }
     
@@ -50,7 +49,7 @@ int main() {
     while (true) {
         showMenu();
         std::cin >> choice;
-        std::cin.ignore(); // Clear newline
+        std::cin.ignore(); 
         
         if (choice == 5) {
             std::cout << "Goodbye!\n";

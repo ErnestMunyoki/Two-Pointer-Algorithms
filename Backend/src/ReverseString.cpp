@@ -8,7 +8,6 @@ std::string& reverseString(std::string& str) {
     int right = static_cast<int>(str.length()) - 1;
     
     while (left < right) {
-        // Swap characters at left and right pointers
         std::swap(str[left], str[right]);
         left++;
         right--;
@@ -17,4 +16,4 @@ std::string& reverseString(std::string& str) {
     return str;
 }
 
-} // namespace TwoPointerAlgorithms
+}

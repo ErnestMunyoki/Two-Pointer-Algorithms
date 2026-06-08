@@ -8,7 +8,6 @@ bool isPalindrome(const std::string& str) {
     int right = static_cast<int>(str.length()) - 1;
     
     while (left < right) {
-        // Compare characters at left and right pointers
         if (str[left] != str[right]) {
             return false;
         }
@@ -19,4 +18,4 @@ bool isPalindrome(const std::string& str) {
     return true;
 }
 
-} // namespace TwoPointerAlgorithms
+}
