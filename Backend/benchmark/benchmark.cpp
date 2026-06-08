@@ -10,7 +10,6 @@
 
 using namespace std::chrono;
 
-// Function to generate a random string of given length
 std::string generateRandomString(int length) {
     std::string str;
     str.reserve(length);
@@ -20,17 +19,15 @@ std::string generateRandomString(int length) {
     return str;
 }
 
-// Function to generate a sorted array with duplicates
 std::vector<int> generateSortedArrayWithDuplicates(int size) {
     std::vector<int> arr;
     arr.reserve(size);
     for (int i = 0; i < size; i++) {
-        arr.push_back(i / 10);  // Create duplicates
+        arr.push_back(i / 10);   
     }
     return arr;
 }
 
-// Function to generate a sorted array
 std::vector<int> generateSortedArray(int size) {
     std::vector<int> arr;
     arr.reserve(size);
@@ -108,7 +105,6 @@ int main() {
     
     outfile << "Algorithm,Input Size,Time (microseconds)\n";
     
-    // Test with three different input sizes
     std::vector<int> sizes = {1000, 10000, 100000};
     
     for (int size : sizes) {
