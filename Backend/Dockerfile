@@ -12,8 +12,8 @@ WORKDIR /app
 # Copy backend files (external dependencies are already included in the repo)
 COPY . /app/
 
-# Build the API server
-RUN make -f makefile directories && make -f makefile api
+# Build the API server (build only, don't run)
+RUN make -f makefile directories && make -f makefile build/api_server
 
 # Expose port 8080
 EXPOSE 8080
